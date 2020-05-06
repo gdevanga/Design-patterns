@@ -22,7 +22,9 @@ public abstract class Operator {
 	{
 		logger.info ("Enter vehicle number : ");
 		int vehicleNumber = sc.nextInt();
-		ParkingSlot slot = ParkingModel.getInstance().handleEntry(vehicleNumber);
+		logger.info ("Enter 1 for car, 2 for bike: ");
+		int vehicleType = sc.nextInt();
+		ParkingSlot slot = ParkingModel.getInstance().handleEntry(vehicleNumber, vehicleType);
 		if (slot == null)
 			logger.info ("No slot available. Parking full!");
 		else

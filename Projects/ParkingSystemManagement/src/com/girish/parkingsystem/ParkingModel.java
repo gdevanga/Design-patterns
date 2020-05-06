@@ -22,17 +22,20 @@ public class ParkingModel {
 		if (instance == null)
 		{
 			instance = new ParkingModel();
-			ParkingSlot.createParkingSlots();
 		}
 		return instance;
 	}
 	
-	public ParkingSlot handleEntry (int vehicleNumber)
+	public ParkingSlot handleEntry (int vehicleNumber, int vehicleType)
 	{
-		ParkingSlot ps = ParkingSlot.getSlot();
+		ParkingSlot ps = null;
+		if (vehicleType == 1)
+			ps = CarParkingSlotManager.getInstance().getSlot();
+		else
+			ps = BikeParkingSlotManager.getInstance().getSlot();
 		if (ps != null)
 		{
-			Ticket tick = new Ticket (ps, vehicleNumber, 1, ticketCounter);
+			Ticket tick = new Ticket (ps, vehicleNumber, 1, ticketCounter, vehicleType);
 			logger.info("Ticket creted with id " + ticketCounter);
 			activeTicketMap.put(ticketCounter, tick);
 			++ticketCounter;
@@ -47,7 +50,10 @@ public class ParkingModel {
 		Ticket tick = activeTicketMap.remove(ticketNumber);
 		if (tick != null)
 		{
-			ParkingSlot.removeSlot(tick.getParkingSlot());
+			if (tick.getVehicleType() == 1)
+				CarParkingSlotManager.getInstance().removeSlot(tick.getParkingSlot());
+			else
+				BikeParkingSlotManager.getInstance().removeSlot(tick.getParkingSlot());
 			inactiveTickets.add(tick);
 		}
 		return tick;
